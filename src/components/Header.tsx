@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
 
   const navigation = [
@@ -17,12 +15,12 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-lg">
+    <header className="bg-white shadow-lg">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-primary">SkillBridge</span>
+              <span className="text-2xl font-bold text-[#477BBC]">SkillBridge</span>
             </Link>
           </div>
 
@@ -34,8 +32,8 @@ const Header: React.FC = () => {
                 to={item.href}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   location.pathname === item.href
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-primary'
+                    ? 'text-[#477BBC] border-b-2 border-[#477BBC]'
+                    : 'text-gray-700 hover:text-[#477BBC]'
                 }`}
               >
                 {item.name}
@@ -44,19 +42,11 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-            >
-              {isDark ? '🌙' : '☀️'}
-            </button>
-
             {/* Mobile menu button */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-primary focus:outline-none"
+                className="p-2 rounded-md text-gray-700 hover:text-[#477BBC] focus:outline-none"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   {isMenuOpen ? (
@@ -73,7 +63,7 @@ const Header: React.FC = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -81,8 +71,8 @@ const Header: React.FC = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     location.pathname === item.href
-                      ? 'text-primary bg-primary/10'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'text-[#477BBC] bg-[#477BBC]/10'
+                      : 'text-gray-700 hover:text-[#477BBC] hover:bg-gray-100'
                   }`}
                 >
                   {item.name}

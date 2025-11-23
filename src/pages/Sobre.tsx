@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Sobre: React.FC = () => {
+const Sobre: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,7 +31,10 @@ export const Sobre: React.FC = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Java', 'Spring Boot', 'PostgreSQL', 'Docker'].map((tech) => (
-              <div key={tech} className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-center">
+              <div
+                key={tech}
+                className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-center"
+              >
                 <span className="text-gray-900 dark:text-white font-medium">{tech}</span>
               </div>
             ))}
@@ -41,3 +44,5 @@ export const Sobre: React.FC = () => {
     </div>
   );
 };
+
+export default Sobre;
