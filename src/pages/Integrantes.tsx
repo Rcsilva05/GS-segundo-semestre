@@ -15,34 +15,34 @@ const Integrantes: React.FC = () => {
   const integrantes: Integrante[] = [
     {
       id: 1,
-      nome: "Rodrigo Carvalho Silva", // Coloque  nome
-      rm: "", // Coloque seu RMseu
-      turma: "",
-      foto: "", // Caminho da foto na pasta public/fotos/
-      linkedin: "",
-      github: "",
-      cargo: ""
+      nome: "Augusto Bonomo Junior", // Coloque  nome
+      rm: "RM 565155", // Coloque seu RMseu
+      turma: "1TDSR",
+      foto: "../public/photos/AugustoBJunior.jpeg", // Caminho da foto na pasta public/fotos/
+      linkedin: "https://www.linkedin.com/in/augusto-junior-bonomo-32777896/",
+      github: "https://github.com/AugustoBJunior",
+      cargo: "Gerente de Progetos"
     },
     {
       id: 2,
-      nome: "", // Coloque nome 
-      rm: "", // Coloque RM 
-      turma: "", //nossa turma
-      foto: "", // baixe a foto e coloque na pasta. Baixe as fotos, coloque na pasta que fotos que está dentro da (public) e jogue as imagens lá dentro. E escreva exatamente como está na pasta
-      linkedin: "", // coloque o link do linkedin
-      github: "", // link github
+      nome: "Nathanael Vieira", // Coloque nome 
+      rm: "RM 564990", // Coloque RM 
+      turma: "1TDSR", //nossa turma
+      foto: "../public/photos/Nathan.jpeg",
+      linkedin: "https://www.linkedin.com/in/nathanael-c%C3%A2ndido-mattos-vieira-392108129/", // coloque o link do linkedin
+      github: "https://github.com/NathanaelV", // link github
       cargo: "Desenvolvedor Backend"
     },
     {
 
       id: 3,          
-      nome: "", // Coloque nome 
-      rm: "", // Coloque RM do colega
-      turma: "",
-      foto: "",
-      linkedin: "",
-      github: "",
-      cargo: ""
+      nome: "Rodrigo Silva", // Coloque nome 
+      rm: "RM 565162", // Coloque RM do colega
+      turma: "1TDSR",
+      foto: "../public/photos/RodrigoCSilva.jpeg",
+      linkedin: "https://www.linkedin.com/in/rodrigo-silva-36a6a3216/",
+      github: "https://github.com/Rcsilva05",
+      cargo: "Vendedor"
     }
   ];
 
@@ -69,7 +69,6 @@ const Integrantes: React.FC = () => {
                     alt={integrante.nome}
                     className="w-full h-64 object-cover"
                     onError={(e) => {
-                      
                       e.currentTarget.src = "/api/placeholder/200/200";
                     }}
                   />

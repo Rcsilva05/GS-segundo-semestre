@@ -23,7 +23,11 @@ const api = axios.create({
 });
 
 /* ============================================================
+<<<<<<< HEAD
    🔍 LOGS PARA DEBUG MELHORADO
+=======
+   🔍 LOGS PARA DEBUG
+>>>>>>> 80cb55b66ba8ffd969f538331fd3056d5f01e99c
 ============================================================= */
 api.interceptors.request.use(
   (config) => {
@@ -44,6 +48,7 @@ api.interceptors.request.use(
   }
 );
 
+<<<<<<< HEAD
 api.interceptors.response.use(
   (response) => {
     console.log(`✅ Sucesso [${response.status}]:`, {
@@ -80,6 +85,8 @@ api.interceptors.response.use(
   }
 );
 
+=======
+>>>>>>> 80cb55b66ba8ffd969f538331fd3056d5f01e99c
 /* ============================================================
    👤 USUÁRIO
 ============================================================= */
@@ -88,10 +95,15 @@ export const usuarioService = {
 
   getById: (id: number) => api.get<Usuario>(`/usuario/${id}`),
 
+<<<<<<< HEAD
   create: (usuario: Omit<Usuario, 'codigo' | 'id'>) => {
     console.log('🎯 Criando usuário com dados:', JSON.stringify(usuario, null, 2));
     return api.post<Usuario>('/usuario', usuario);
   },
+=======
+  create: (usuario: Omit<Usuario, 'codigo' | 'id'>) =>
+    api.post<Usuario>('/usuario', usuario),
+>>>>>>> 80cb55b66ba8ffd969f538331fd3056d5f01e99c
 
   update: (id: number, usuario: Partial<Usuario>) =>
     api.put<Usuario>(`/usuario/${id}`, usuario),
@@ -115,6 +127,7 @@ export const habilidadeService = {
   getUsuarioHabilidades: (usuarioId: number) =>
     api.get<HabilidadeUsuario[]>(`/usuario/${usuarioId}/habilidade_usuario`),
 
+<<<<<<< HEAD
   addHabilidadeUsuario: (usuarioId: number, habilidadeId: number, nivel: string) => {
     const payload = {
       nivel: nivel,
@@ -124,6 +137,13 @@ export const habilidadeService = {
     console.log('🎯 Adicionando habilidade:', payload);
     return api.post<HabilidadeUsuario>(`/usuario/${usuarioId}/habilidade_usuario`, payload);
   },
+=======
+  addHabilidadeUsuario: (usuarioId: number, habilidadeId: number, nivel: string) =>
+    api.post<HabilidadeUsuario>(`/usuario/${usuarioId}/habilidade_usuario`, {
+      nivel,
+      idHabilidade: habilidadeId,
+    }),
+>>>>>>> 80cb55b66ba8ffd969f538331fd3056d5f01e99c
 
   deleteHabilidadeUsuario: (habilidadeUsuarioId: number) =>
     api.delete(`/habilidade_usuario/${habilidadeUsuarioId}`),

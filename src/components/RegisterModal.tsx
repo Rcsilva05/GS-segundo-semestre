@@ -86,40 +86,45 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setErrorMsg("");
+    e.preventDefault();
+    setErrorMsg("");
 
-  // Validações básicas apenas
-  if (form.senha !== form.confirmarSenha)
-    return setErrorMsg("As senhas não coincidem.");
+    // Validações
+    if (form.senha !== form.confirmarSenha)
+      return setErrorMsg("As senhas não coincidem.");
 
   if (form.cpf.length !== 11)
     return setErrorMsg("CPF inválido (11 números).");
 
-  // ✅ TESTE: Payload MÍNIMO sem habilidades
-  const payload = {
-    nome: form.nome,
-    email: form.email,
-    senha: form.senha,
-    sexo: form.sexo,
-    cpf: Number(form.cpf),
-    dataNascimento: form.dataNascimento,
-    // REMOVE idEmpresa e habilidadesUsuario completamente
-  };
+    if (form.cpf.length !== 11)
+      return setErrorMsg("CPF inválido (11 números).");
 
-  console.log("🧪 TESTE - Payload MÍNIMO:", JSON.stringify(payload, null, 2));
+    // ✅ Payload CORRETO para API Java - conforme seus tipos
+    const payload = {
+      nome: form.nome,
+      email: form.email,
+      senha: form.senha,
+      sexo: form.sexo,
+      cpf: Number(form.cpf), // ✅ Convertendo para number
+      dataNascimento: form.dataNascimento,
+      idEmpresa: form.empresa ? Number(form.empresa) : undefined, // ✅ undefined em vez de null
+      habilidadesUsuario: selected.map((id) => ({
+        nivel: "iniciante",
+        idHabilidade: id,
+      })),
+    };
 
-  setLoading(true);
-  const ok = await register(payload);
-  setLoading(false);
+    console.log("📤 Enviando para API Java:", payload);
 
-  if (ok) {
+    setLoading(true);
+    const ok = await register(payload);
+    setLoading(false);
+
+    if (!ok) return setErrorMsg("Erro ao cadastrar. Tente novamente.");
+    
     onSuccess();
     onClose();
-  } else {
-    setErrorMsg("Erro ao cadastrar. Verifique os dados e tente novamente.");
-  }
-};
+  };
 
   // Reset form quando modal abrir/fechar
   useEffect(() => {

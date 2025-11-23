@@ -46,6 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const register = async (
+<<<<<<< HEAD
   userData: Omit<Usuario, "codigo" | "id">
 ): Promise<boolean> => {
   try {
@@ -65,6 +66,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     if (!created.habilidadesUsuario) {
       created.habilidadesUsuario = [];
+=======
+    userData: Omit<Usuario, "codigo" | "id">
+  ): Promise<boolean> => {
+    try {
+      const response = await usuarioService.create(userData);
+      const created = response.data;
+      
+      if (!created.habilidadesUsuario) {
+        created.habilidadesUsuario = [];
+      }
+      
+      setUser(created);
+      setIsAuthenticated(true);
+      localStorage.setItem("user", JSON.stringify(created));
+      return true;
+    } catch (err) {
+      console.error("Erro no cadastro:", err);
+      return false;
+>>>>>>> 80cb55b66ba8ffd969f538331fd3056d5f01e99c
     }
     
     setUser(created);
