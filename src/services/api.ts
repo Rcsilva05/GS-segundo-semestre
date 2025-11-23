@@ -6,14 +6,13 @@ import {
   Trilha,
   Curso,
   TrilhaUsuario,
-  HabilidadeUsuario
+  HabilidadeUsuario,
 } from '../types';
 
-/* ============================================
+/* ============================================================
    🔗 BASE DA API (Render)
-=============================================== */
+============================================================= */
 const API_BASE_URL = 'https://gs-skillbridge.onrender.com';
-// const API_BASE_URL = 'http://localhost:8080/';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -21,9 +20,9 @@ const api = axios.create({
   timeout: 15000,
 });
 
-/* ============================================
+/* ============================================================
    🔍 LOGS PARA DEBUG
-=============================================== */
+============================================================= */
 api.interceptors.request.use(
   (config) => {
     console.log(`🔄 Request: ${config.method?.toUpperCase()} ${config.url}`);
@@ -44,33 +43,33 @@ api.interceptors.response.use(
   }
 );
 
-/* ============================================
+/* ============================================================
    👤 USUÁRIO
-=============================================== */
+============================================================= */
 export const usuarioService = {
   getAll: () => api.get<Usuario[]>('/usuario'),
 
   getById: (id: number) => api.get<Usuario>(`/usuario/${id}`),
 
-  create: (usuario: Omit<Usuario, 'codigo' | 'id'>) => {
-    return api.post<Usuario>('/usuario', usuario);
-  },
+  create: (usuario: Omit<Usuario, 'codigo' | 'id'>) =>
+    api.post<Usuario>('/usuario', usuario),
 
   update: (id: number, usuario: Partial<Usuario>) =>
     api.put<Usuario>(`/usuario/${id}`, usuario),
 };
 
-/* ============================================
+/* ============================================================
    🏢 EMPRESA
-=============================================== */
+============================================================= */
 export const empresaService = {
   getAll: () => api.get<Empresa[]>('/empresa'),
+
   getById: (id: number) => api.get<Empresa>(`/empresa/${id}`),
 };
 
-/* ============================================
+/* ============================================================
    🧩 HABILIDADE
-=============================================== */
+============================================================= */
 export const habilidadeService = {
   getAll: () => api.get<Habilidade[]>('/habilidade'),
 
@@ -80,16 +79,16 @@ export const habilidadeService = {
   addHabilidadeUsuario: (usuarioId: number, habilidadeId: number, nivel: string) =>
     api.post<HabilidadeUsuario>(`/usuario/${usuarioId}/habilidade_usuario`, {
       nivel,
-      habilidade: { id: habilidadeId },
+      idHabilidade: habilidadeId,
     }),
 
   deleteHabilidadeUsuario: (habilidadeUsuarioId: number) =>
     api.delete(`/habilidade_usuario/${habilidadeUsuarioId}`),
 };
 
-/* ============================================
+/* ============================================================
    📚 TRILHA
-=============================================== */
+============================================================= */
 export const trilhaService = {
   getAll: () => api.get<Trilha[]>('/trilha'),
 
@@ -110,9 +109,9 @@ export const trilhaService = {
     api.get<Curso[]>(`/trilha/${trilhaId}/curso`),
 };
 
-/* ============================================
+/* ============================================================
    🎓 CURSO
-=============================================== */
+============================================================= */
 export const cursoService = {
   getById: (id: number) => api.get<Curso>(`/curso/${id}`),
 };
