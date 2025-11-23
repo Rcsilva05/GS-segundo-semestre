@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,6 +7,7 @@ import RegisterModal from './RegisterModal';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const location = useLocation();
@@ -15,6 +17,13 @@ const Header: React.FC = () => {
     { name: 'Pagina 1', href: '/' },
     { name: 'Pagina 2', href: '/trilhas' },
     { name: 'Pagina 3', href: '/empresas' },
+  ];
+
+  const userNavigation = [
+    { name: 'Minhas Trilhas', href: '/minhas-trilhas' },
+    { name: 'Adicionar Trilhas', href: '/adicionar-trilhas' },
+    { name: 'Meus Cursos', href: '/meus-cursos' },
+    { name: 'Meu Perfil', href: '/meu-perfil' },
   ];
 
   const handleLoginSuccess = () => {
@@ -37,7 +46,7 @@ const Header: React.FC = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation - Centralizado igual na imagem */}
+            {/* Desktop Navigation - Centralizado */}
             <div className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
@@ -74,13 +83,47 @@ const Header: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-700">Olá, {user?.nome}</span>
-                  <button
-                    onClick={logout}
-                    className="text-red-600 hover:text-red-800 text-sm transition-colors"
-                  >
-                    Sair
-                  </button>
+                  {/* Menu do Usuário Logado */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="flex items-center space-x-2 text-gray-700 hover:text-[#477BBC] transition-colors"
+                    >
+                      <div className="w-8 h-8 bg-[#477BBC] rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                        {user?.nome?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                      <span>Olá, {user?.nome?.split(' ')[0] || 'Usuário'}</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu do Usuário */}
+                    {isUserMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                        {userNavigation.map((item) => (
+                          <Link
+                            key={item.name}
+                            to={item.href}
+                            onClick={() => setIsUserMenuOpen(false)}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#477BBC] transition-colors"
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
+                        <div className="border-t border-gray-200 my-1"></div>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          Sair
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -120,6 +163,37 @@ const Header: React.FC = () => {
                     {item.name}
                   </Link>
                 ))}
+                
+                {/* Menu do usuário logado no mobile */}
+                {isAuthenticated && (
+                  <>
+                    <div className="border-t border-gray-200 pt-2">
+                      <div className="px-3 py-2 text-sm text-gray-500">
+                        Logado como: {user?.nome}
+                      </div>
+                      {userNavigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#477BBC] hover:bg-gray-100"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+                      >
+                        Sair
+                      </button>
+                    </div>
+                  </>
+                )}
+                
                 {!isAuthenticated && (
                   <div className="border-t border-gray-200 pt-2">
                     <button

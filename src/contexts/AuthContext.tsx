@@ -18,22 +18,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, senha: string): Promise<boolean> => {
     try {
-      console.log('Tentando login com:', { email });
       const response = await usuarioService.getAll();
       const users = response.data;
-      
-      console.log('Usuários encontrados:', users);
-      
-      const foundUser = users.find(u => u.email === email && u.senha === senha);
-      
-      if (foundUser) {
-        console.log('Usuário encontrado:', foundUser);
-        setUser(foundUser);
+
+      const found = users.find(u => u.email === email && u.senha === senha);
+
+      if (found) {
+        setUser(found);
         setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(foundUser));
+        localStorage.setItem('user', JSON.stringify(found));
         return true;
       }
-      console.log('Usuário não encontrado ou senha incorreta');
+
       return false;
     } catch (error) {
       console.error('Erro no login:', error);
@@ -41,28 +37,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (userData: Omit<Usuario, 'codigo' | 'id'>): Promise<boolean> => {
+  const register = async (formUser: any): Promise<boolean> => {
     try {
-      console.log('Enviando dados para cadastro:', userData);
-      
-      // Verificar se a API está respondendo
-      const testResponse = await usuarioService.getAll();
-      console.log('Teste da API - Status:', testResponse.status);
-      
-      const response = await usuarioService.create(userData);
-      console.log('Resposta da API:', response);
-      console.log('Dados do usuário criado:', response.data);
-      
+      const payload = {
+        ...formUser,
+
+        // OBRIGATÓRIO pela API
+        idEmpresa: 1,
+
+        habilidadesUsuario: [
+          {
+            nivel: "iniciante",
+            habilidade: { id: 1 }
+          }
+        ]
+      };
+
+      const response = await usuarioService.create(payload);
+
       setUser(response.data);
       setIsAuthenticated(true);
       localStorage.setItem('user', JSON.stringify(response.data));
+
       return true;
     } catch (error: any) {
-      console.error('Erro completo no cadastro:', error);
-      console.error('Mensagem do erro:', error.message);
-      console.error('Response data:', error.response?.data);
-      console.error('Response status:', error.response?.status);
-      console.error('Response headers:', error.response?.headers);
+      console.error('Erro no registro:', error);
       return false;
     }
   };
@@ -82,8 +81,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used inside AuthProvider');
   return context;
 };
