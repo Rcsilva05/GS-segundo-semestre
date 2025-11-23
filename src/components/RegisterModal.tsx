@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -7,43 +8,104 @@ interface RegisterModalProps {
   onSwitchToLogin: () => void;
 }
 
+const HABILIDADES = [
+  { id: 1, nome: "Comunicação Não-Violenta" },
+  { id: 2, nome: "Resolução de Conflitos e Mediação" },
+  { id: 3, nome: "Pensamento Crítico e Análise" },
+  { id: 4, nome: "Negociação e Persuasão" },
+  { id: 5, nome: "Inteligência Emocional" },
+  { id: 6, nome: "Colaboração Remota" },
+  { id: 7, nome: "Gestão do Tempo" },
+  { id: 8, nome: "Liderança Situacional" },
+  { id: 9, nome: "Adaptabilidade e Resiliência" },
+  { id: 10, nome: "Oratória e Apresentação" },
+];
+
 const RegisterModal: React.FC<RegisterModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
   onSwitchToLogin,
 }) => {
-  const [formData, setFormData] = useState({
+
+  const { register } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [form, setForm] = useState({
     nome: "",
-    telefone: "",
     email: "",
-    empresa: "",
+    senha: "",
+    confirmarSenha: "",
+    cpf: "",
+    sexo: "M",
     dataNascimento: "",
-    documento: "",
-    habilidades: "",
-    desenvolver: "",
+    empresa: "",
   });
 
-  const handleChange = (e: any) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const [selected, setSelected] = useState<number[]>([]);
+
+  const toggle = (id: number) => {
+    setSelected(prev =>
+      prev.includes(id)
+        ? prev.filter(x => x !== id)
+        : [...prev, id]
+    );
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("Dados enviados:", formData);
+    setErrorMsg("");
 
-    onSuccess(); // fecha o modal após cadastro (como antes)
+    if (form.senha !== form.confirmarSenha)
+      return setErrorMsg("As senhas não coincidem.");
+
+    if (selected.length === 0)
+      return setErrorMsg("Selecione ao menos uma habilidade.");
+
+    if (form.cpf.length !== 11)
+      return setErrorMsg("CPF inválido (11 números).");
+
+    // ⛔ ANTES (errado)
+    // habilidade: { id }
+
+    // ✅ AGORA (correto para API + types.ts)
+    const payload = {
+      nome: form.nome,
+      email: form.email,
+      senha: form.senha,
+      sexo: form.sexo,
+      cpf: Number(form.cpf),
+      dataNascimento: form.dataNascimento,
+      idEmpresa: form.empresa ? Number(form.empresa) : undefined,
+      habilidadesUsuario: selected.map((id) => ({
+        nivel: "iniciante",
+        idHabilidade: id, // <-- CORRETO
+      })),
+    };
+
+    console.log("📤 Payload final:", payload);
+
+    setLoading(true);
+    const ok = await register(payload);
+    setLoading(false);
+
+    if (!ok) return setErrorMsg("Erro ao cadastrar. Tente novamente.");
+    onSuccess();
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 animate-fadeIn">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8">
 
-        {/* HEADER */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Criar Conta</h2>
+          <h2 className="text-2xl font-semibold text-[#477BBC]">
+            Criar Conta
+          </h2>
+
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-xl"
@@ -52,142 +114,153 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           </button>
         </div>
 
-        {/* FORM */}
-        <form className="space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Nome Completo *
-            </label>
-            <input
-              name="nome"
-              value={formData.nome}
-              onChange={handleChange}
-              required
-              placeholder="Seu nome completo"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-            />
+        {errorMsg && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm mb-4 text-center">
+            {errorMsg}
           </div>
+        )}
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Telefone *
-            </label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          <Field label="Nome Completo *">
             <input
-              name="telefone"
-              value={formData.telefone}
-              onChange={handleChange}
+              className="input"
+              value={form.nome}
+              onChange={(e) => setForm({ ...form, nome: e.target.value })}
               required
-              placeholder="(00) 99999-9999"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              E-mail *
-            </label>
+          <Field label="E-mail *">
             <input
-              name="email"
+              className="input"
               type="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
-              placeholder="seu@email.com"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Empresa (opcional)
-            </label>
+          <Field label="Senha *">
             <input
-              name="empresa"
-              value={formData.empresa}
-              onChange={handleChange}
-              placeholder="Nome da empresa"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+              className="input"
+              type="password"
+              value={form.senha}
+              onChange={(e) => setForm({ ...form, senha: e.target.value })}
+              required
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Data de Nascimento *
-            </label>
+          <Field label="Confirmar Senha *">
             <input
-              name="dataNascimento"
+              className="input"
+              type="password"
+              value={form.confirmarSenha}
+              onChange={(e) =>
+                setForm({ ...form, confirmarSenha: e.target.value })
+              }
+              required
+            />
+          </Field>
+
+          <Field label="CPF *">
+            <input
+              className="input"
+              maxLength={11}
+              placeholder="Apenas números"
+              value={form.cpf}
+              onChange={(e) => setForm({ ...form, cpf: e.target.value })}
+              required
+            />
+          </Field>
+
+          <Field label="Data de Nascimento *">
+            <input
+              className="input"
               type="date"
-              value={formData.dataNascimento}
-              onChange={handleChange}
+              value={form.dataNascimento}
+              onChange={(e) =>
+                setForm({ ...form, dataNascimento: e.target.value })
+              }
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Documento *
-            </label>
+          <Field label="Sexo *">
+            <select
+              className="input"
+              value={form.sexo}
+              onChange={(e) => setForm({ ...form, sexo: e.target.value })}
+            >
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="O">Outro</option>
+            </select>
+          </Field>
+
+          <Field label="Empresa (opcional)">
             <input
-              name="documento"
-              value={formData.documento}
-              onChange={handleChange}
-              required
-              placeholder="CPF ou RG (somente números)"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+              className="input"
+              value={form.empresa}
+              onChange={(e) => setForm({ ...form, empresa: e.target.value })}
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Habilidades que tenho
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Habilidades *
             </label>
-            <textarea
-              name="habilidades"
-              value={formData.habilidades}
-              onChange={handleChange}
-              rows={3}
-              placeholder="Ex: Comunicação, Excel, etc..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          </div>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">
-              Gostaria de desenvolver
-            </label>
-            <textarea
-              name="desenvolver"
-              value={formData.desenvolver}
-              onChange={handleChange}
-              rows={3}
-              placeholder="Ex: Programação, liderança..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-            ></textarea>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {HABILIDADES.map((h) => (
+                <label key={h.id} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(h.id)}
+                    onChange={() => toggle(h.id)}
+                  />
+                  {h.nome}
+                </label>
+              ))}
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition"
+            disabled={loading}
+            className="w-full bg-[#477BBC] text-white py-3 rounded-lg font-semibold hover:bg-[#3a6a9d] transition disabled:bg-[#7b9dcc]"
           >
-            Criar Conta
+            {loading ? "Cadastrando..." : "Criar Conta"}
           </button>
 
-          {/* Alternar para Login */}
-          <p className="text-center mt-4 text-sm">
-            Já tem uma conta?{" "}
+          <p className="text-center text-sm">
+            Já tem conta?{" "}
             <button
-              onClick={onSwitchToLogin}
               type="button"
-              className="text-blue-600 hover:underline"
+              onClick={onSwitchToLogin}
+              className="text-[#477BBC] hover:underline"
             >
               Fazer login
             </button>
           </p>
+
         </form>
+
       </div>
     </div>
   );
 };
+
+const Field: React.FC<{ label: string; children: React.ReactNode }> = ({
+  label,
+  children,
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    {children}
+  </div>
+);
 
 export default RegisterModal;

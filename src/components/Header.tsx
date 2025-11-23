@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,15 +12,19 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuth();
 
+  // Menu principal de navegação - ATUALIZADO
   const navigation = [
-    { name: 'Pagina 1', href: '/' },
-    { name: 'Pagina 2', href: '/trilhas' },
-    { name: 'Pagina 3', href: '/empresas' },
+    { name: 'Início', href: '/' },
+    { name: 'Trilhas', href: '/trilhas' },
+    { name: 'Empresas', href: '/empresas' },
+    { name: 'Integrantes', href: '/integrantes' }, // NOVO
+    { name: 'Contato', href: '/contato' }, // NOVO
   ];
 
+  // Menu do usuário logado - ATUALIZADO
   const userNavigation = [
     { name: 'Minhas Trilhas', href: '/minhas-trilhas' },
-    { name: 'Adicionar Trilhas', href: '/adicionar-trilhas' },
+    { name: 'Minhas Habilidades', href: '/minhas-habilidades' }, // NOVO
     { name: 'Meus Cursos', href: '/meus-cursos' },
     { name: 'Meu Perfil', href: '/meu-perfil' },
   ];
@@ -46,7 +49,7 @@ const Header: React.FC = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation - Centralizado */}
+            {/* Desktop Navigation - Centralizado - ATUALIZADO */}
             <div className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
@@ -54,7 +57,7 @@ const Header: React.FC = () => {
                   to={item.href}
                   className={`px-3 py-2 text-sm font-medium transition-colors ${
                     location.pathname === item.href
-                      ? 'text-[#477BBC] font-semibold'
+                      ? 'text-[#477BBC] font-semibold border-b-2 border-[#477BBC]'
                       : 'text-gray-700 hover:text-[#477BBC]'
                   }`}
                 >
@@ -92,7 +95,7 @@ const Header: React.FC = () => {
                       <div className="w-8 h-8 bg-[#477BBC] rounded-full flex items-center justify-center text-white text-sm font-semibold">
                         {user?.nome?.charAt(0).toUpperCase() || 'U'}
                       </div>
-                      <span>Olá, {user?.nome?.split(' ')[0] || 'Usuário'}</span>
+                      <span className="hidden sm:block">Olá, {user?.nome?.split(' ')[0] || 'Usuário'}</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
@@ -145,10 +148,11 @@ const Header: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile Navigation - ATUALIZADO */}
           {isMenuOpen && (
             <div className="md:hidden border-t border-gray-200">
               <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
+                {/* Menu Principal Mobile */}
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
@@ -167,9 +171,9 @@ const Header: React.FC = () => {
                 {/* Menu do usuário logado no mobile */}
                 {isAuthenticated && (
                   <>
-                    <div className="border-t border-gray-200 pt-2">
-                      <div className="px-3 py-2 text-sm text-gray-500">
-                        Logado como: {user?.nome}
+                    <div className="border-t border-gray-200 pt-2 mt-2">
+                      <div className="px-3 py-2 text-sm text-gray-500 font-semibold">
+                        Minha Conta
                       </div>
                       {userNavigation.map((item) => (
                         <Link
@@ -194,8 +198,12 @@ const Header: React.FC = () => {
                   </>
                 )}
                 
+                {/* Menu de autenticação mobile */}
                 {!isAuthenticated && (
-                  <div className="border-t border-gray-200 pt-2">
+                  <div className="border-t border-gray-200 pt-2 mt-2">
+                    <div className="px-3 py-2 text-sm text-gray-500 font-semibold">
+                      Entrar
+                    </div>
                     <button
                       onClick={() => {
                         setShowLogin(true);

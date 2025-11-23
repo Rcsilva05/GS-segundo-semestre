@@ -9,6 +9,11 @@ import Trilhas from './pages/trilhas';
 import Empresas from './pages/Empresas';
 import Contato from './pages/Contato';
 import Integrantes from './pages/Integrantes';
+import MinhasTrilhas from './pages/MinhasTrilhas';
+import MinhasHabilidades from './pages/MinhasHabilidades';
+import MeusCursos from './pages/MeusCursos';
+import MeuPerfil from './pages/MeuPerfil';
+import TrilhaDetalhes from './pages/TrilhaDetalhes';
 
 function App() {
   return (
@@ -24,6 +29,15 @@ function App() {
               <Route path="/empresas" element={<Empresas />} />
               <Route path="/contato" element={<Contato />} />
               <Route path="/integrantes" element={<Integrantes />} />
+              
+              {/* Rotas de detalhes */}
+              <Route path="/trilha/:id" element={<TrilhaDetalhes />} />
+              
+              {/* Rotas do usuário logado */}
+              <Route path="/minhas-trilhas" element={<MinhasTrilhas />} />
+              <Route path="/minhas-habilidades" element={<MinhasHabilidades />} />
+              <Route path="/meus-cursos" element={<MeusCursos />} />
+              <Route path="/meu-perfil" element={<MeuPerfil />} />
             </Routes>
           </main>
           <Footer />

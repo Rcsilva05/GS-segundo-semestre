@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { trilhaService } from '../services/api'; // Import correto
-import { Trilha } from '../types';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { trilhaService } from '../services/api';
+import { trilhasData, Trilha as TrilhaLocal } from '../data/coursesData';
+import { Trilha as TrilhaAPI } from '../types';
 
 const Trilhas: React.FC = () => {
-  const [trilhas, setTrilhas] = useState<Trilha[]>([]);
+  const [trilhasAPI, setTrilhasAPI] = useState<TrilhaAPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
+
+  // Combinar dados da API com dados locais
+  const trilhasCompletas = trilhasData.map(trilhaLocal => {
+    const trilhaAPI = trilhasAPI.find(t => t.id === trilhaLocal.id);
+    return {
+      ...trilhaLocal,
+      descricao: trilhaAPI?.descricao || trilhaLocal.descricao,
+      areaProfissional: trilhaAPI?.areaProfissional || trilhaLocal.areaProfissional
+    };
+  });
 
   useEffect(() => {
     const fetchTrilhas = async () => {
       try {
-        console.log('Buscando trilhas da API...');
         const response = await trilhaService.getAll();
-        console.log('Trilhas recebidas:', response.data);
-        setTrilhas(response.data);
+        setTrilhasAPI(response.data);
       } catch (err) {
-        console.error('Erro ao carregar trilhas:', err);
-        setError('Erro ao carregar trilhas. Verifique se a API está rodando.');
+        console.log('API offline, usando dados locais');
+        setError('API offline - Mostrando dados de demonstração');
       } finally {
         setLoading(false);
       }
@@ -24,6 +36,15 @@ const Trilhas: React.FC = () => {
 
     fetchTrilhas();
   }, []);
+
+  const handleAddTrilha = (trilhaId: number) => {
+    if (!isAuthenticated) {
+      alert('Faça login para adicionar trilhas ao seu perfil!');
+      return;
+    }
+    alert(`Trilha ${trilhaId} adicionada ao seu perfil!`);
+    // Aqui você integraria com a API: trilhaService.addTrilhaUsuario(userId, trilhaId)
+  };
 
   if (loading) {
     return (
@@ -36,19 +57,8 @@ const Trilhas: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center text-red-600">
-          <p className="text-lg font-semibold">{error}</p>
-          <p className="text-sm mt-2">Verifique se o servidor está rodando em http://localhost:8080</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -56,63 +66,90 @@ const Trilhas: React.FC = () => {
             Nossas Trilhas de Aprendizado
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Escolha sua jornada e transforme seu futuro profissional com trilhas personalizadas
+            Escolha sua jornada e transforme seu futuro profissional
           </p>
+          {error && (
+            <div className="mt-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Lista de Trilhas */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {trilhas.map((trilha) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+          {trilhasCompletas.map((trilha) => (
             <div
               key={trilha.id}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
               <div className="h-2 bg-gradient-to-r from-[#477BBC] to-[#9359D8]"></div>
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{trilha.nome}</h3>
+                <div className="flex items-center mb-4">
+                  <span className="text-2xl mr-3">{trilha.icone}</span>
+                  <h3 className="text-xl font-bold text-gray-900">{trilha.nome}</h3>
+                </div>
+                
                 <p className="text-gray-600 mb-4 leading-relaxed">{trilha.descricao}</p>
                 
-                <div className="mb-6">
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Duração:</span>
+                    <span className="font-medium text-gray-700">{trilha.duracaoTotal}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Nível:</span>
+                    <span className="font-medium text-gray-700">{trilha.nivel}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Cursos:</span>
+                    <span className="font-medium text-gray-700">{trilha.cursos.length} cursos</span>
+                  </div>
+                </div>
+
+                <div className="mb-4">
                   <span className="inline-block bg-[#477BBC]/10 text-[#477BBC] px-3 py-1 rounded-full text-sm font-medium">
                     {trilha.areaProfissional}
                   </span>
                 </div>
 
                 <div className="flex space-x-3">
-                  <button className="flex-1 bg-[#477BBC] text-white py-2 px-4 rounded-lg font-semibold hover:bg-[#3a6a9d] transition-colors text-center">
-                    Começar Agora
+                  <button 
+                    onClick={() => handleAddTrilha(trilha.id)}
+                    className="flex-1 bg-[#477BBC] text-white py-2 px-4 rounded-lg font-semibold hover:bg-[#3a6a9d] transition-colors text-center"
+                  >
+                    {isAuthenticated ? 'Adicionar à Minha Trilha' : 'Fazer Login'}
                   </button>
-                  <button className="flex-1 border border-[#477BBC] text-[#477BBC] py-2 px-4 rounded-lg font-semibold hover:bg-[#477BBC] hover:text-white transition-colors text-center">
+                  <Link
+                    to={`/trilha/${trilha.id}`}
+                    className="flex-1 border border-[#477BBC] text-[#477BBC] py-2 px-4 rounded-lg font-semibold hover:bg-[#477BBC] hover:text-white transition-colors text-center flex items-center justify-center"
+                  >
                     Ver Detalhes
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {trilhas.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">
-              Nenhuma trilha disponível no momento.
-            </p>
-            <p className="text-gray-500 text-sm mt-2">
-              Verifique se a API está retornando dados.
-            </p>
-          </div>
-        )}
-
         {/* CTA Section */}
-        <div className="bg-gradient-to-r from-[#477BBC] to-[#9359D8] rounded-2xl p-8 mt-12 text-white text-center">
+        <div className="bg-gradient-to-r from-[#477BBC] to-[#9359D8] rounded-2xl p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Não sabe por onde começar?
+            Pronto para começar sua jornada?
           </h2>
           <p className="text-xl mb-6 max-w-2xl mx-auto">
-            Nossa IA analisa seu perfil e recomenda a trilha perfeita para seus objetivos.
+            {isAuthenticated 
+              ? 'Escolha uma trilha acima e comece sua transformação profissional hoje mesmo!'
+              : 'Faça login ou crie uma conta gratuita para começar suas trilhas de aprendizado.'
+            }
           </p>
-          <button className="bg-white text-[#477BBC] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-            Descobrir Minha Trilha Ideal
-          </button>
+          {!isAuthenticated && (
+            <Link
+              to="/"
+              className="bg-white text-[#477BBC] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Fazer Login
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -1,46 +1,57 @@
 import axios from 'axios';
-import { Usuario, Empresa, Habilidade, Trilha, Curso, TrilhaUsuario, HabilidadeUsuario } from '../types';
+import {
+  Usuario,
+  Empresa,
+  Habilidade,
+  Trilha,
+  Curso,
+  TrilhaUsuario,
+  HabilidadeUsuario
+} from '../types';
 
-const API_BASE_URL = 'http://localhost:8080';
+/* ============================================
+   🔗 BASE DA API (Render)
+=============================================== */
+const API_BASE_URL = 'https://gs-skillbridge.onrender.com';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 15000,
 });
 
+/* ============================================
+   🔍 LOGS PARA DEBUG
+=============================================== */
 api.interceptors.request.use(
   (config) => {
-    console.log(`🔄 Request ${config.method?.toUpperCase()} → ${config.url}`);
-    console.log('Payload:', config.data);
+    console.log(`🔄 Request: ${config.method?.toUpperCase()} ${config.url}`);
+    console.log('📤 Data enviada:', config.data);
     return config;
   },
-  (error) => {
-    console.error('❌ Erro na requisição:', error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
   (response) => {
-    console.log(`✅ Response ${response.status}:`, response.data);
+    console.log(`✅ Response: ${response.status}`, response.data);
     return response;
   },
   (error) => {
-    console.error('❌ Erro na resposta:', error);
+    console.error('❌ Erro na resposta', error.response?.data);
     return Promise.reject(error);
   }
 );
 
-// Usuário — IMPORTANTE: Enviar exatamente o que a API exige
+/* ============================================
+   👤 USUÁRIO
+=============================================== */
 export const usuarioService = {
   getAll: () => api.get<Usuario[]>('/usuario'),
+
   getById: (id: number) => api.get<Usuario>(`/usuario/${id}`),
 
-  create: (usuario: any) => {
-    console.log('📤 Criando usuário:', usuario);
+  create: (usuario: Omit<Usuario, 'codigo' | 'id'>) => {
     return api.post<Usuario>('/usuario', usuario);
   },
 
@@ -48,29 +59,59 @@ export const usuarioService = {
     api.put<Usuario>(`/usuario/${id}`, usuario),
 };
 
+/* ============================================
+   🏢 EMPRESA
+=============================================== */
 export const empresaService = {
   getAll: () => api.get<Empresa[]>('/empresa'),
   getById: (id: number) => api.get<Empresa>(`/empresa/${id}`),
 };
 
+/* ============================================
+   🧩 HABILIDADE
+=============================================== */
 export const habilidadeService = {
   getAll: () => api.get<Habilidade[]>('/habilidade'),
-  getUsuarioHabilidades: (id: number) =>
-    api.get<HabilidadeUsuario[]>(`/usuario/${id}/habilidade_usuario`),
-  deleteHabilidadeUsuario: (id: number) => api.delete(`/habilidade_usuario/${id}`),
+
+  getUsuarioHabilidades: (usuarioId: number) =>
+    api.get<HabilidadeUsuario[]>(`/usuario/${usuarioId}/habilidade_usuario`),
+
+  addHabilidadeUsuario: (usuarioId: number, habilidadeId: number, nivel: string) =>
+    api.post<HabilidadeUsuario>(`/usuario/${usuarioId}/habilidade_usuario`, {
+      nivel,
+      habilidade: { id: habilidadeId },
+    }),
+
+  deleteHabilidadeUsuario: (habilidadeUsuarioId: number) =>
+    api.delete(`/habilidade_usuario/${habilidadeUsuarioId}`),
 };
 
+/* ============================================
+   📚 TRILHA
+=============================================== */
 export const trilhaService = {
   getAll: () => api.get<Trilha[]>('/trilha'),
+
   getById: (id: number) => api.get<Trilha>(`/trilha/${id}`),
-  getUsuarioTrilhas: (id: number) =>
-    api.get<TrilhaUsuario[]>(`/usuario/${id}/trilha_usuario`),
-  addTrilhaUsuario: (id: number, trilhaId: number) =>
-    api.post(`/usuario/${id}/trilha_usuario`, { idTrilha: trilhaId }),
-  deleteTrilhaUsuario: (id: number) => api.delete(`/trilha_usuario/${id}`),
-  getTrilhaCursos: (id: number) => api.get<Curso[]>(`/trilha/${id}/curso`),
+
+  getUsuarioTrilhas: (usuarioId: number) =>
+    api.get<TrilhaUsuario[]>(`/usuario/${usuarioId}/trilha_usuario`),
+
+  addTrilhaUsuario: (usuarioId: number, trilhaId: number) =>
+    api.post(`/usuario/${usuarioId}/trilha_usuario`, {
+      idTrilha: trilhaId,
+    }),
+
+  deleteTrilhaUsuario: (trilhaUsuarioId: number) =>
+    api.delete(`/trilha_usuario/${trilhaUsuarioId}`),
+
+  getTrilhaCursos: (trilhaId: number) =>
+    api.get<Curso[]>(`/trilha/${trilhaId}/curso`),
 };
 
+/* ============================================
+   🎓 CURSO
+=============================================== */
 export const cursoService = {
   getById: (id: number) => api.get<Curso>(`/curso/${id}`),
 };
