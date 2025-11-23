@@ -6,11 +6,10 @@ export interface Usuario {
   senha: string | null;
   sexo: string;
   dataNascimento: string;
-  cpf: number;  // ← AJUSTADO
+  cpf: number;
   idEmpresa?: number;
   habilidadesUsuario?: HabilidadeUsuario[];
 }
-
 
 export interface HabilidadeUsuario {
   id?: number;

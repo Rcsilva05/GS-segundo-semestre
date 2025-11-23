@@ -12,7 +12,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const stored = localStorage.getItem("user");
     if (stored) {
       const parsed: Usuario = JSON.parse(stored);
-      // Garante que exista habilidadesUsuario
       if (!parsed.habilidadesUsuario) {
         parsed.habilidadesUsuario = [];
       }
@@ -25,7 +24,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await usuarioService.getAll();
       const usuarios = response.data;
-      const found = usuarios.find((u) => u.email === email);
+      
+      // Busca usuário por email E senha
+      const found = usuarios.find((u) => u.email === email && u.senha === senha);
       if (!found) {
         return false;
       }
@@ -45,23 +46,42 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const register = async (
-    userData: Omit<Usuario, "codigo" | "id">
-  ): Promise<boolean> => {
-    try {
-      const response = await usuarioService.create(userData);
-      const created = response.data;
-      if (!created.habilidadesUsuario) {
-        created.habilidadesUsuario = [];
-      }
-      setUser(created);
-      setIsAuthenticated(true);
-      localStorage.setItem("user", JSON.stringify(created));
-      return true;
-    } catch (err) {
-      console.error("Erro no cadastro:", err);
-      return false;
+  userData: Omit<Usuario, "codigo" | "id">
+): Promise<boolean> => {
+  try {
+    console.log("🎯 DADOS QUE SERÃO ENVIADOS:", {
+      url: '/usuario',
+      method: 'POST',
+      data: userData
+    });
+
+    console.log("📦 PAYLOAD COMPLETO:", JSON.stringify(userData, null, 2));
+
+    const response = await usuarioService.create(userData);
+    
+    console.log("✅ RESPOSTA DA API:", response.data);
+    
+    const created = response.data;
+    
+    if (!created.habilidadesUsuario) {
+      created.habilidadesUsuario = [];
     }
-  };
+    
+    setUser(created);
+    setIsAuthenticated(true);
+    localStorage.setItem("user", JSON.stringify(created));
+    return true;
+  } catch (err: any) {
+    console.error("❌ ERRO DETALHADO NO CADASTRO:", {
+      message: err.message,
+      status: err.response?.status,
+      data: err.response?.data,
+      headers: err.response?.headers,
+      config: err.config
+    });
+    return false;
+  }
+};
 
   const logout = () => {
     localStorage.removeItem("user");

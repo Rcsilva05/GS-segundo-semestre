@@ -15,8 +15,8 @@ const Integrantes: React.FC = () => {
   const integrantes: Integrante[] = [
     {
       id: 1,
-      nome: "", // Coloque seu nome
-      rm: "", // Coloque seu RM
+      nome: "Rodrigo Carvalho Silva", // Coloque  nome
+      rm: "", // Coloque seu RMseu
       turma: "",
       foto: "", // Caminho da foto na pasta public/fotos/
       linkedin: "",
@@ -69,7 +69,7 @@ const Integrantes: React.FC = () => {
                     alt={integrante.nome}
                     className="w-full h-64 object-cover"
                     onError={(e) => {
-                      // Se a foto não carregar, mostra um placeholder
+                      
                       e.currentTarget.src = "/api/placeholder/200/200";
                     }}
                   />
