@@ -12,19 +12,20 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuth();
 
-  // Menu principal de navegação - ATUALIZADO
+  // Menu principal de navegação
   const navigation = [
     { name: 'Início', href: '/' },
+    { name: 'Sobre', href: '/sobre' },
     { name: 'Trilhas', href: '/trilhas' },
     { name: 'Empresas', href: '/empresas' },
-    { name: 'Integrantes', href: '/integrantes' }, // NOVO
-    { name: 'Contato', href: '/contato' }, // NOVO
+    { name: 'Integrantes', href: '/integrantes' },
+    { name: 'Contato', href: '/contato' },
   ];
 
-  // Menu do usuário logado - ATUALIZADO
+  // Menu do usuário logado
   const userNavigation = [
     { name: 'Minhas Trilhas', href: '/minhas-trilhas' },
-    { name: 'Minhas Habilidades', href: '/minhas-habilidades' }, // NOVO
+    { name: 'Minhas Habilidades', href: '/minhas-habilidades' },
     { name: 'Meus Cursos', href: '/meus-cursos' },
     { name: 'Meu Perfil', href: '/meu-perfil' },
   ];
@@ -39,64 +40,66 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white shadow-sm border-b">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <header className="bg-white shadow-sm border-b relative z-50">
+        <nav className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
             {/* Logo */}
-            <div className="flex items-center">
-              <Link to="/" className="flex-shrink-0">
-                <span className="text-2xl font-bold text-[#477BBC]">SkillBridge</span>
+            <div className="flex items-center flex-shrink-0">
+              <Link to="/" className="flex items-center">
+                <span className="text-xl sm:text-2xl font-bold text-[#477BBC]">SkillBridge</span>
               </Link>
             </div>
 
-            {/* Desktop Navigation - Centralizado - ATUALIZADO */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors ${
-                    location.pathname === item.href
-                      ? 'text-[#477BBC] font-semibold border-b-2 border-[#477BBC]'
-                      : 'text-gray-700 hover:text-[#477BBC]'
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
+            {/* Desktop Navigation - Centralizado */}
+            <div className="hidden lg:flex items-center justify-center flex-1 mx-8">
+              <div className="flex items-center space-x-4 xl:space-x-8">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`px-2 py-1 xl:px-3 xl:py-2 text-sm font-medium transition-colors whitespace-nowrap ${
+                      location.pathname === item.href
+                        ? 'text-[#477BBC] font-semibold border-b-2 border-[#477BBC]'
+                        : 'text-gray-700 hover:text-[#477BBC]'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Auth Buttons - Lado direito */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               {!isAuthenticated ? (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 sm:space-x-3">
                   <button
                     onClick={() => setShowLogin(true)}
-                    className="text-gray-700 hover:text-[#477BBC] font-medium transition-colors"
+                    className="text-gray-700 hover:text-[#477BBC] font-medium transition-colors text-sm sm:text-base px-2 py-1"
                   >
                     Login
                   </button>
-                  <span className="text-gray-300">|</span>
+                  <span className="text-gray-300 hidden sm:block">|</span>
                   <button
                     onClick={() => setShowRegister(true)}
-                    className="text-gray-700 hover:text-[#477BBC] font-medium transition-colors"
+                    className="bg-[#477BBC] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium hover:bg-[#3a6a9d] transition-colors text-sm sm:text-base"
                   >
                     Criar Conta
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-4">
                   {/* Menu do Usuário Logado */}
                   <div className="relative">
                     <button
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                      className="flex items-center space-x-2 text-gray-700 hover:text-[#477BBC] transition-colors"
+                      className="flex items-center space-x-1 sm:space-x-2 text-gray-700 hover:text-[#477BBC] transition-colors p-1 sm:p-2"
                     >
-                      <div className="w-8 h-8 bg-[#477BBC] rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#477BBC] rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
                         {user?.nome?.charAt(0).toUpperCase() || 'U'}
                       </div>
-                      <span className="hidden sm:block">Olá, {user?.nome?.split(' ')[0] || 'Usuário'}</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <span className="hidden sm:block text-sm">Olá, {user?.nome?.split(' ')[0] || 'Usuário'}</span>
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
@@ -131,12 +134,13 @@ const Header: React.FC = () => {
               )}
 
               {/* Mobile menu button */}
-              <div className="md:hidden">
+              <div className="lg:hidden">
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="p-2 rounded-md text-gray-700 hover:text-[#477BBC] focus:outline-none"
+                  className="p-1.5 sm:p-2 rounded-md text-gray-700 hover:text-[#477BBC] focus:outline-none focus:ring-2 focus:ring-[#477BBC] focus:ring-offset-2"
+                  aria-label="Menu"
                 >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     {isMenuOpen ? (
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     ) : (
@@ -148,20 +152,20 @@ const Header: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Navigation - ATUALIZADO */}
+          {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-200">
-              <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
+            <div className="lg:hidden border-t border-gray-200 bg-white absolute top-full left-0 right-0 shadow-lg">
+              <div className="px-2 pt-2 pb-4 space-y-1">
                 {/* Menu Principal Mobile */}
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    className={`block px-3 py-3 rounded-lg text-base font-medium transition-colors ${
                       location.pathname === item.href
-                        ? 'text-[#477BBC] bg-[#477BBC]/10'
-                        : 'text-gray-700 hover:text-[#477BBC] hover:bg-gray-100'
+                        ? 'text-[#477BBC] bg-[#477BBC]/10 border-l-4 border-[#477BBC]'
+                        : 'text-gray-700 hover:text-[#477BBC] hover:bg-gray-50'
                     }`}
                   >
                     {item.name}
@@ -171,8 +175,8 @@ const Header: React.FC = () => {
                 {/* Menu do usuário logado no mobile */}
                 {isAuthenticated && (
                   <>
-                    <div className="border-t border-gray-200 pt-2 mt-2">
-                      <div className="px-3 py-2 text-sm text-gray-500 font-semibold">
+                    <div className="border-t border-gray-200 pt-3 mt-2">
+                      <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Minha Conta
                       </div>
                       {userNavigation.map((item) => (
@@ -180,7 +184,7 @@ const Header: React.FC = () => {
                           key={item.name}
                           to={item.href}
                           onClick={() => setIsMenuOpen(false)}
-                          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#477BBC] hover:bg-gray-100"
+                          className="block px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-[#477BBC] hover:bg-gray-50 transition-colors"
                         >
                           {item.name}
                         </Link>
@@ -190,7 +194,7 @@ const Header: React.FC = () => {
                           logout();
                           setIsMenuOpen(false);
                         }}
-                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+                        className="block w-full text-left px-3 py-3 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
                       >
                         Sair
                       </button>
@@ -200,27 +204,27 @@ const Header: React.FC = () => {
                 
                 {/* Menu de autenticação mobile */}
                 {!isAuthenticated && (
-                  <div className="border-t border-gray-200 pt-2 mt-2">
-                    <div className="px-3 py-2 text-sm text-gray-500 font-semibold">
-                      Entrar
+                  <div className="border-t border-gray-200 pt-3 mt-2">
+                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Entrar na Plataforma
                     </div>
                     <button
                       onClick={() => {
                         setShowLogin(true);
                         setIsMenuOpen(false);
                       }}
-                      className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#477BBC] hover:bg-gray-100"
+                      className="block w-full text-left px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-[#477BBC] hover:bg-gray-50 transition-colors"
                     >
-                      Login
+                      Fazer Login
                     </button>
                     <button
                       onClick={() => {
                         setShowRegister(true);
                         setIsMenuOpen(false);
                       }}
-                      className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#477BBC] hover:bg-gray-100"
+                      className="block w-full text-left px-3 py-3 rounded-lg text-base font-medium text-white bg-[#477BBC] hover:bg-[#3a6a9d] transition-colors mt-2"
                     >
-                      Criar Conta
+                      Criar Conta Gratuita
                     </button>
                   </div>
                 )}
