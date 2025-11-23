@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Usuario, AuthContextType } from "../types";
 import { usuarioService } from "../services/api";
@@ -13,7 +12,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const stored = localStorage.getItem("user");
     if (stored) {
       const parsed: Usuario = JSON.parse(stored);
-      // Garante que exista habilidadesUsuario
       if (!parsed.habilidadesUsuario) {
         parsed.habilidadesUsuario = [];
       }
@@ -26,7 +24,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await usuarioService.getAll();
       const usuarios = response.data;
-      const found = usuarios.find((u) => u.email === email);
+      
+      // Busca usuário por email E senha
+      const found = usuarios.find((u) => u.email === email && u.senha === senha);
       if (!found) {
         return false;
       }
@@ -51,9 +51,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await usuarioService.create(userData);
       const created = response.data;
+      
       if (!created.habilidadesUsuario) {
         created.habilidadesUsuario = [];
       }
+      
       setUser(created);
       setIsAuthenticated(true);
       localStorage.setItem("user", JSON.stringify(created));
