@@ -1,9 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
-import Footer from './components/Footer';
-
+import Footer from './components/footer';
 import Home from './pages/Home';
 import Sobre from './pages/Sobre';
 import Trilhas from './pages/trilhas';
@@ -13,24 +12,24 @@ import Integrantes from './pages/Integrantes';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-white">
-        <Header />
-
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sobre" element={<Sobre />} />
-            <Route path="/trilhas" element={<Trilhas />} />
-            <Route path="/empresas" element={<Empresas />} />
-            <Route path="/contato" element={<Contato />} />
-            <Route path="/integrantes" element={<Integrantes />} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-white flex flex-col">
+          <Header />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/sobre" element={<Sobre />} />
+              <Route path="/trilhas" element={<Trilhas />} />
+              <Route path="/empresas" element={<Empresas />} />
+              <Route path="/contato" element={<Contato />} />
+              <Route path="/integrantes" element={<Integrantes />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

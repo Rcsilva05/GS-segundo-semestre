@@ -12,51 +12,27 @@ const Footer: React.FC = () => {
               SkillBridge
             </Link>
             <p className="text-gray-300 mb-6 max-w-md">
-              Conectando talentos a oportunidades. Transformando vidas através da educação e tecnologia, 
-              fechando o abismo entre pessoas que precisam de oportunidade e empresas que precisam de talentos.
+              Conectando talentos a oportunidades através da requalificação profissional e inclusão produtiva.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white transition-colors text-lg">
-                <span className="sr-only">Facebook</span>
-                📘
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors text-lg">
-                <span className="sr-only">Instagram</span>
-                📷
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors text-lg">
-                <span className="sr-only">LinkedIn</span>
-                💼
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors text-lg">
-                <span className="sr-only">Twitter</span>
-                🐦
-              </a>
-            </div>
           </div>
           
           {/* Links Rápidos */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-white">Links Rápidos</h4>
+            <h4 className="text-lg font-semibold mb-4 text-white">Navegação</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/sobre" className="text-gray-300 hover:text-white transition-colors">
-                  Sobre Nós
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors">
+                  Página 1
                 </Link>
               </li>
               <li>
                 <Link to="/trilhas" className="text-gray-300 hover:text-white transition-colors">
-                  Trilhas de Aprendizado
+                  Página 2
                 </Link>
               </li>
               <li>
                 <Link to="/empresas" className="text-gray-300 hover:text-white transition-colors">
-                  Empresas Parceiras
-                </Link>
-              </li>
-              <li>
-                <Link to="/integrantes" className="text-gray-300 hover:text-white transition-colors">
-                  Nossa Equipe
+                  Página 3
                 </Link>
               </li>
             </ul>
@@ -66,44 +42,18 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4 text-white">Contato</h4>
             <ul className="space-y-3 text-gray-300">
-              <li className="flex items-start">
-                <span className="mr-2">📧</span>
-                <div>
-                  <div>contato@skillbridge.com</div>
-                  <div>suporte@skillbridge.com</div>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">📞</span>
-                <div>
-                  <div>(11) 9999-9999</div>
-                  <div>(11) 8888-8888</div>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">📍</span>
-                <div>São Paulo - SP, Brasil</div>
-              </li>
+              <li>contato@skillbridge.com</li>
+              <li>(11) 9999-9999</li>
+              <li>São Paulo - SP</li>
             </ul>
           </div>
         </div>
         
         {/* Bottom Bar */}
-        <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300 text-sm">
             &copy; 2024 SkillBridge. Todos os direitos reservados.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link to="/contato" className="text-gray-300 hover:text-white text-sm transition-colors">
-              Contato
-            </Link>
-            <a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">
-              Privacidade
-            </a>
-            <a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">
-              Termos
-            </a>
-          </div>
         </div>
       </div>
     </footer>

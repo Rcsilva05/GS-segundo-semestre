@@ -12,12 +12,9 @@ const Header: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
 
   const navigation = [
-    { name: 'Início', href: '/' },
-    { name: 'Sobre', href: '/sobre' },
-    { name: 'Trilhas', href: '/trilhas' },
-    { name: 'Empresas', href: '/empresas' },
-    { name: 'Contato', href: '/contato' },
-    { name: 'Integrantes', href: '/integrantes' },
+    { name: 'Pagina 1', href: '/' },
+    { name: 'Pagina 2', href: '/trilhas' },
+    { name: 'Pagina 3', href: '/empresas' },
   ];
 
   const handleLoginSuccess = () => {
@@ -30,24 +27,25 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white shadow-lg">
+      <header className="bg-white shadow-sm border-b">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
             <div className="flex items-center">
-              <Link to="/" className="flex-shrink-0 flex items-center">
+              <Link to="/" className="flex-shrink-0">
                 <span className="text-2xl font-bold text-[#477BBC]">SkillBridge</span>
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Centralizado igual na imagem */}
             <div className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium transition-colors ${
                     location.pathname === item.href
-                      ? 'text-[#477BBC] border-b-2 border-[#477BBC]'
+                      ? 'text-[#477BBC] font-semibold'
                       : 'text-gray-700 hover:text-[#477BBC]'
                   }`}
                 >
@@ -56,19 +54,20 @@ const Header: React.FC = () => {
               ))}
             </div>
 
+            {/* Auth Buttons - Lado direito */}
             <div className="flex items-center space-x-4">
-              {/* Auth Buttons */}
               {!isAuthenticated ? (
-                <div className="flex space-x-3">
+                <div className="flex items-center space-x-3">
                   <button
                     onClick={() => setShowLogin(true)}
-                    className="text-[#477BBC] hover:text-[#3a6a9d] font-medium transition-colors"
+                    className="text-gray-700 hover:text-[#477BBC] font-medium transition-colors"
                   >
                     Login
                   </button>
+                  <span className="text-gray-300">|</span>
                   <button
                     onClick={() => setShowRegister(true)}
-                    className="bg-[#477BBC] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3a6a9d] transition-colors"
+                    className="text-gray-700 hover:text-[#477BBC] font-medium transition-colors"
                   >
                     Criar Conta
                   </button>
@@ -78,7 +77,7 @@ const Header: React.FC = () => {
                   <span className="text-gray-700">Olá, {user?.nome}</span>
                   <button
                     onClick={logout}
-                    className="text-red-600 hover:text-red-800 font-medium transition-colors"
+                    className="text-red-600 hover:text-red-800 text-sm transition-colors"
                   >
                     Sair
                   </button>
@@ -105,8 +104,8 @@ const Header: React.FC = () => {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
+            <div className="md:hidden border-t border-gray-200">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
@@ -122,7 +121,7 @@ const Header: React.FC = () => {
                   </Link>
                 ))}
                 {!isAuthenticated && (
-                  <>
+                  <div className="border-t border-gray-200 pt-2">
                     <button
                       onClick={() => {
                         setShowLogin(true);
@@ -141,7 +140,7 @@ const Header: React.FC = () => {
                     >
                       Criar Conta
                     </button>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
