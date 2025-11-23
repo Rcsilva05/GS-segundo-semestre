@@ -5,7 +5,7 @@ interface Integrante {
   nome: string;
   rm: string;
   turma: string;
-  foto: string;
+  foto: string; // Agora é o caminho local da foto
   linkedin: string;
   github: string;
   cargo: string;
@@ -15,33 +15,34 @@ const Integrantes: React.FC = () => {
   const integrantes: Integrante[] = [
     {
       id: 1,
-      nome: "", // Preencha com seu nome
-      rm: "", // Preencha com seu RM
-      turma: "2TDSPX",
-      foto: "", // Coloque URL da foto
-      linkedin: "", // Coloque link do LinkedIn
-      github: "", // Coloque link do GitHub
-      cargo: "Desenvolvedor Full Stack"
+      nome: "", // Coloque seu nome
+      rm: "", // Coloque seu RM
+      turma: "",
+      foto: "", // Caminho da foto na pasta public/fotos/
+      linkedin: "",
+      github: "",
+      cargo: ""
     },
     {
       id: 2,
-      nome: "", // Preencha com nome do colega
-      rm: "", // Preencha com RM do colega
-      turma: "2TDSPX",
-      foto: "",
-      linkedin: "",
-      github: "",
+      nome: "", // Coloque nome 
+      rm: "", // Coloque RM 
+      turma: "", //nossa turma
+      foto: "", // baixe a foto e coloque na pasta. Baixe as fotos, coloque na pasta que fotos que está dentro da (public) e jogue as imagens lá dentro. E escreva exatamente como está na pasta
+      linkedin: "", // coloque o link do linkedin
+      github: "", // link github
       cargo: "Desenvolvedor Backend"
     },
     {
-      id: 3,
-      nome: "", // Preencha com nome do colega
-      rm: "", // Preencha com RM do colega
-      turma: "2TDSPX",
+
+      id: 3,          
+      nome: "", // Coloque nome 
+      rm: "", // Coloque RM do colega
+      turma: "",
       foto: "",
       linkedin: "",
       github: "",
-      cargo: "Desenvolvedor Frontend"
+      cargo: ""
     }
   ];
 
@@ -64,9 +65,13 @@ const Integrantes: React.FC = () => {
               >
                 <div className="w-full">
                   <img
-                    src={integrante.foto || "/api/placeholder/200/200"}
+                    src={integrante.foto}
                     alt={integrante.nome}
                     className="w-full h-64 object-cover"
+                    onError={(e) => {
+                      // Se a foto não carregar, mostra um placeholder
+                      e.currentTarget.src = "/api/placeholder/200/200";
+                    }}
                   />
                 </div>
 
