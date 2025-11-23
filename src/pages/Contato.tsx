@@ -65,25 +65,6 @@ const Contato: React.FC = () => {
     }
   ];
 
-  const perguntasFrequentes = [
-    {
-      pergunta: "Como me cadastrar na plataforma?",
-      resposta: "Basta clicar em 'Criar Conta' no canto superior direito e preencher suas informações. O processo é gratuito e rápido."
-    },
-    {
-      pergunta: "A SkillBridge é realmente gratuita?",
-      resposta: "Sim! Nossa missão é conectar talentos a oportunidades sem custo para os candidatos."
-    },
-    {
-      pergunta: "Como funciona o match com as empresas?",
-      resposta: "Usamos IA para analisar seu perfil e conectar você com vagas que combinam com suas habilidades e experiência."
-    },
-    {
-      pergunta: "Posso fazer mais de uma trilha ao mesmo tempo?",
-      resposta: "Sim! Você pode se inscrever em quantas trilhas quiser e progredir no seu próprio ritmo."
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -211,10 +192,8 @@ const Contato: React.FC = () => {
             </form>
           </div>
 
-          {/* Informações de Contato e FAQ */}
+          {/* Informações de Contato */}
           <div className="space-y-8">
-            
-            {/* Informações de Contato */}
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Informações de Contato
@@ -229,8 +208,8 @@ const Contato: React.FC = () => {
                     <div>
                       <h3 className="font-semibold text-gray-900 text-lg mb-1">{info.titulo}</h3>
                       <div className="space-y-1">
-                        {info.detalhes.map((detalhe, i) => (
-                          <p key={i} className="text-gray-600">{detalhe}</p>
+                        {info.detalhes.map((detalhe, detalheIndex) => (
+                          <p key={detalheIndex} className="text-gray-600">{detalhe}</p>
                         ))}
                       </div>
                       <p className="text-gray-500 text-sm mt-2">{info.descricao}</p>
@@ -239,45 +218,11 @@ const Contato: React.FC = () => {
                 ))}
               </div>
             </div>
-
-            {/* FAQ */}
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Perguntas Frequentes
-              </h2>
-              
-              <div className="space-y-4">
-                {perguntasFrequentes.map((faq, index) => (
-                  <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
-                    <h3 className="font-semibold text-gray-900 mb-2">
-                      {faq.pergunta}
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      {faq.resposta}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mapa (Placeholder) */}
-        <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Onde Estamos
-          </h2>
-          <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <span className="text-4xl mb-2 block">🗺️</span>
-              <p>Mapa da localização</p>
-              <p className="text-sm">São Paulo - SP, Brasil</p>
-            </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}  
 
 export default Contato;
