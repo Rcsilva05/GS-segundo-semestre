@@ -59,8 +59,15 @@ export interface TrilhaUsuario {
   trilha?: Trilha;
 }
 
-export interface ApiResponse<T> {
-  data: T;
-  status: number;
-  message?: string;
+export interface LoginData {
+  email: string;
+  senha: string;
+}
+
+export interface AuthContextType {
+  user: Usuario | null;
+  login: (email: string, senha: string) => Promise<boolean>;
+  register: (userData: Omit<Usuario, 'codigo' | 'id'>) => Promise<boolean>;
+  logout: () => void;
+  isAuthenticated: boolean;
 }
