@@ -6,20 +6,20 @@ const Home: React.FC = () => {
 
   const faqItems = [
     {
-      pergunta: "Como me cadastrar na plataforma?",
-      resposta: "Basta clicar em 'Criar Conta' no canto superior direito e preencher suas informações. O processo é gratuito e rápido."
+      pergunta: "O que é a SkillBridge?",
+      resposta: "A SkillBridge é uma plataforma digital que utiliza inteligência artificial para recomendar trilhas de aprendizado personalizadas e conectar profissionais requalificados a oportunidades de trabalho, promovendo inclusão produtiva e diversidade."
     },
     {
-      pergunta: "A SkillBridge é realmente gratuita?",
-      resposta: "Sim! Nossa missão é conectar talentos a oportunidades sem custo para os candidatos."
+      pergunta: "Quem pode usar a plataforma?",
+      resposta: "Qualquer pessoa interessada em se requalificar profissionalmente pode se cadastrar. A plataforma é especialmente voltada para trabalhadores em situação de vulnerabilidade, como jovens, mulheres, pessoas com baixa escolaridade e profissionais em setores em risco de automação."
     },
     {
-      pergunta: "Como funciona o match com as empresas?",
-      resposta: "Usamos IA para analisar seu perfil e conectar você com vagas que combinam com suas habilidades e experiência."
+      pergunta: "Como funciona a análise de perfil com IA?",
+      resposta: "Ao se cadastrar, o usuário fornece informações sobre sua trajetória, habilidades e objetivos. A IA analisa esses dados e recomenda trilhas de aprendizado alinhadas ao perfil, promovendo uma jornada personalizada e eficiente"
     },
     {
-      pergunta: "Posso fazer mais de uma trilha ao mesmo tempo?",
-      resposta: "Sim! Você pode se inscrever em quantas trilhas quiser e progredir no seu próprio ritmo."
+      pergunta: "A SkillBridge oferece cursos próprios?",
+      resposta: "Não. A plataforma integra cursos de instituições parceiras, como ONGs, universidades e plataformas de ensino online. Os cursos são organizados em trilhas temáticas que facilitam a progressão do usuário."
     }
   ];
 
