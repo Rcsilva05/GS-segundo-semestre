@@ -103,7 +103,7 @@ const Trilhas: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* ✅ BOTÃO ÚNICO - 100% API */}
+                  
                   <button 
                     onClick={() => handleAddTrilha(trilha.id)}
                     className="w-full bg-[#477BBC] text-white py-3 px-4 rounded-lg font-semibold hover:bg-[#3a6a9d] transition-colors text-center"
