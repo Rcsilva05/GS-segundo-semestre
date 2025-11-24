@@ -144,9 +144,7 @@ const Home: React.FC = () => {
                   <p className="text-gray-600 mb-4">{course.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">Instrutor: {course.instructor}</span>
-                    <button className="bg-[#477BBC] text-white px-4 py-2 rounded-lg hover:bg-[#3a6a9d] transition-colors">
-                      Ver Curso
-                    </button>
+                    
                   </div>
                 </div>
               </div>

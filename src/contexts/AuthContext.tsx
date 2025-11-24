@@ -12,9 +12,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const stored = localStorage.getItem("user");
     if (stored) {
       const parsed: Usuario = JSON.parse(stored);
-      if (!parsed.habilidadesUsuario) {
-        parsed.habilidadesUsuario = [];
-      }
+      if (!parsed.habilidadesUsuario) parsed.habilidadesUsuario = [];
       setUser(parsed);
       setIsAuthenticated(true);
     }
@@ -24,84 +22,59 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await usuarioService.getAll();
       const usuarios = response.data;
-      
-      // Busca usuário por email E senha
-      const found = usuarios.find((u) => u.email === email && u.senha === senha);
-      if (!found) {
-        return false;
-      }
 
-      if (!found.habilidadesUsuario) {
-        found.habilidadesUsuario = [];
-      }
+      const found = usuarios.find((u) => u.email === email && u.senha === senha);
+      if (!found) return false;
+
+      if (!found.habilidadesUsuario) found.habilidadesUsuario = [];
 
       setUser(found);
       setIsAuthenticated(true);
       localStorage.setItem("user", JSON.stringify(found));
       return true;
     } catch (err) {
-      console.error("Erro no login:", err);
+      console.error("❌ Erro no login:", err);
       return false;
     }
   };
 
   const register = async (
-<<<<<<< HEAD
-  userData: Omit<Usuario, "codigo" | "id">
-): Promise<boolean> => {
-  try {
-    console.log("🎯 DADOS QUE SERÃO ENVIADOS:", {
-      url: '/usuario',
-      method: 'POST',
-      data: userData
-    });
-
-    console.log("📦 PAYLOAD COMPLETO:", JSON.stringify(userData, null, 2));
-
-    const response = await usuarioService.create(userData);
-    
-    console.log("✅ RESPOSTA DA API:", response.data);
-    
-    const created = response.data;
-    
-    if (!created.habilidadesUsuario) {
-      created.habilidadesUsuario = [];
-=======
     userData: Omit<Usuario, "codigo" | "id">
   ): Promise<boolean> => {
     try {
+      // Validação básica antes de enviar
+      if (!/\S+@\S+\.\S+/.test(userData.email)) {
+        console.error("❌ Email inválido:", userData.email);
+        return false;
+      }
+
+      if (String(userData.cpf).length !== 11) {
+        console.error("❌ CPF inválido:", userData.cpf);
+        return false;
+      }
+
+      console.log("📤 Enviando para API:", JSON.stringify(userData, null, 2));
+
       const response = await usuarioService.create(userData);
       const created = response.data;
-      
-      if (!created.habilidadesUsuario) {
-        created.habilidadesUsuario = [];
-      }
-      
+
+      if (!created.habilidadesUsuario) created.habilidadesUsuario = [];
+
       setUser(created);
       setIsAuthenticated(true);
       localStorage.setItem("user", JSON.stringify(created));
       return true;
-    } catch (err) {
-      console.error("Erro no cadastro:", err);
+    } catch (err: any) {
+      console.error("❌ Erro no cadastro:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+        headers: err.response?.headers,
+        requestData: err.config?.data
+      });
       return false;
->>>>>>> 80cb55b66ba8ffd969f538331fd3056d5f01e99c
     }
-    
-    setUser(created);
-    setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(created));
-    return true;
-  } catch (err: any) {
-    console.error("❌ ERRO DETALHADO NO CADASTRO:", {
-      message: err.message,
-      status: err.response?.status,
-      data: err.response?.data,
-      headers: err.response?.headers,
-      config: err.config
-    });
-    return false;
-  }
-};
+  };
 
   const logout = () => {
     localStorage.removeItem("user");
