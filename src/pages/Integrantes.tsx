@@ -18,7 +18,7 @@ const Integrantes: React.FC = () => {
       nome: "Augusto Bonomo Junior", // Coloque  nome
       rm: "RM 565155", // Coloque seu RMseu
       turma: "1TDSR",
-      foto: "../public/photos/AugustoBJunior.jpeg", // Caminho da foto na pasta public/fotos/
+      foto: "AugustoBjunior.jpeg", // Caminho da foto na pasta public/fotos/
       linkedin: "https://www.linkedin.com/in/augusto-junior-bonomo-32777896/",
       github: "https://github.com/AugustoBJunior",
       cargo: "Gerente de Progetos"
@@ -28,7 +28,7 @@ const Integrantes: React.FC = () => {
       nome: "Nathanael Vieira", // Coloque nome 
       rm: "RM 564990", // Coloque RM 
       turma: "1TDSR", //nossa turma
-      foto: "../public/photos/Nathan.jpeg",
+      foto: "Nathan.jpeg",
       linkedin: "https://www.linkedin.com/in/nathanael-c%C3%A2ndido-mattos-vieira-392108129/", // coloque o link do linkedin
       github: "https://github.com/NathanaelV", // link github
       cargo: "Desenvolvedor Backend"
@@ -39,7 +39,7 @@ const Integrantes: React.FC = () => {
       nome: "Rodrigo Silva", // Coloque nome 
       rm: "RM 565162", // Coloque RM do colega
       turma: "1TDSR",
-      foto: "../public/photos/RodrigoCSilva.jpeg",
+      foto: "RodrigoCSilva.jpeg",
       linkedin: "https://www.linkedin.com/in/rodrigo-silva-36a6a3216/",
       github: "https://github.com/Rcsilva05",
       cargo: "Vendedor"

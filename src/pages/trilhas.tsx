@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { trilhaService } from '../services/api';
 import { Trilha as TrilhaAPI } from '../types';
@@ -8,7 +7,7 @@ const Trilhas: React.FC = () => {
   const [trilhas, setTrilhas] = useState<TrilhaAPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     const fetchTrilhas = async () => {
@@ -28,13 +27,20 @@ const Trilhas: React.FC = () => {
     fetchTrilhas();
   }, []);
 
-  const handleAddTrilha = (trilhaId: number) => {
-    if (!isAuthenticated) {
+  const handleAddTrilha = async (trilhaId: number) => {
+    if (!isAuthenticated || !user?.id) {
       alert('Faça login para adicionar trilhas ao seu perfil!');
       return;
     }
-    alert(`Trilha ${trilhaId} adicionada ao seu perfil!`);
-    // Aqui você integraria com a API: trilhaService.addTrilhaUsuario(userId, trilhaId)
+
+    try {
+      // ✅ AGORA USA A API REAL - Adiciona trilha ao usuário
+      await trilhaService.addTrilhaUsuario(user.id, trilhaId);
+      alert(`Trilha adicionada ao seu perfil com sucesso!`);
+    } catch (err) {
+      console.error('❌ Erro ao adicionar trilha:', err);
+      alert('Erro ao adicionar trilha. Tente novamente.');
+    }
   };
 
   if (loading) {
@@ -97,20 +103,13 @@ const Trilhas: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex space-x-3">
-                    <button 
-                      onClick={() => handleAddTrilha(trilha.id)}
-                      className="flex-1 bg-[#477BBC] text-white py-2 px-4 rounded-lg font-semibold hover:bg-[#3a6a9d] transition-colors text-center"
-                    >
-                      {isAuthenticated ? 'Adicionar à Minha Trilha' : 'Fazer Login'}
-                    </button>
-                    <Link
-                      to={`/trilha/${trilha.id}`}
-                      className="flex-1 border border-[#477BBC] text-[#477BBC] py-2 px-4 rounded-lg font-semibold hover:bg-[#477BBC] hover:text-white transition-colors text-center flex items-center justify-center"
-                    >
-                      Ver Detalhes
-                    </Link>
-                  </div>
+                  {/* ✅ BOTÃO ÚNICO - 100% API */}
+                  <button 
+                    onClick={() => handleAddTrilha(trilha.id)}
+                    className="w-full bg-[#477BBC] text-white py-3 px-4 rounded-lg font-semibold hover:bg-[#3a6a9d] transition-colors text-center"
+                  >
+                    {isAuthenticated ? 'Adicionar à Minha Trilha' : 'Fazer Login para Adicionar'}
+                  </button>
                 </div>
               </div>
             ))}
@@ -128,14 +127,6 @@ const Trilhas: React.FC = () => {
               : 'Faça login ou crie uma conta gratuita para começar suas trilhas de aprendizado.'
             }
           </p>
-          {!isAuthenticated && (
-            <Link
-              to="/"
-              className="bg-white text-[#477BBC] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              Fazer Login
-            </Link>
-          )}
         </div>
       </div>
     </div>
